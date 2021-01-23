@@ -139,7 +139,8 @@ struct Game {
         
         while true {
             var newPaths = [[Int]]()
-            for i in 0..<numberOfDices {
+            //for i in 0..<numberOfDices {
+            DispatchQueue.concurrentPerform(iterations: numberOfDices) { i in
                 for path in paths {
                     if canAdd(pos: i, to: path) {
                         var newPath = path
