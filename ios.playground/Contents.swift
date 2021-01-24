@@ -182,24 +182,29 @@ struct Game {
         board.flatMap{ $0 }.enumerated().filter{ i, v in v == letter }.map{ i, v in i }
     }
     
-    func findPath(word: String) -> [Int]? {
-        var path = [[pathStart]]
+    func findPaths(word: String) -> [[Int]] {
+        var paths = [[pathStart]]
         
         for letter in word.uppercased() {
+            var newPaths = [[Int]]()
             for pos in getPositions(letter: String(letter)) {
-                if canAdd(pos: pos, to: path[0]) {
-                    path[0].append(pos)
-                    break
+                for path in paths {
+                    if canAdd(pos: pos, to: path) {
+                        var newPath = path
+                        newPath.append(pos)
+                        newPaths.append(newPath)
+                    }
                 }
             }
+            paths = newPaths
         }
         
-        return path.count == 1 && path[0] == [pathStart] ? nil : Array(path[0][1...])
+        return paths.map{ Array($0[1...]) }
     }
 }
 
 //var game = Game()
 var game = Game(board: [["B", "C", "I", "I", "T"], ["V", "A", "A", "I", "O"], ["N", "O", "T", "F", "N"], ["P", "N", "R", "A", "C"], ["A", "U", "E", "E", "F"]])
 game.printBoard()
-//print(game.findAllWords().sorted(by: {$0.count > $1.count}))
-print(game.findPath(word: "notaio"))
+print(game.findAllWords().sorted(by: {$0.count > $1.count}))
+print(game.findPaths(word: "notaio"))
