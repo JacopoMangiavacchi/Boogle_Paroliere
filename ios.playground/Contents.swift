@@ -38,23 +38,26 @@ struct Game {
 
     let checker = UITextChecker()
     
-    var board: [[String]]?
+    var board: [[String]]
     
-    init() {
-        var board = [[String]](repeating: [String](repeating: "", count: numberOfColumns), count: numberOfColumns)
-        
-        for i in 0..<numberOfDices {
-            let row = i / numberOfColumns
-            let col = i - (row * numberOfColumns)
-            board[row][col] = dice[i][Int.random(in: 0..<numberOfFaces)]
+    init(board: [[String]]? = nil) {
+        if let board = board {
+            self.board = board
         }
-        
-        self.board = board
+        else {
+            var board = [[String]](repeating: [String](repeating: "", count: numberOfColumns), count: numberOfColumns)
+            
+            for i in 0..<numberOfDices {
+                let row = i / numberOfColumns
+                let col = i - (row * numberOfColumns)
+                board[row][col] = dice[i][Int.random(in: 0..<numberOfFaces)]
+            }
+            
+            self.board = board
+        }
     }
     
     func printBoard() {
-        guard let board = board else { return }
-        
         for row in 0..<numberOfColumns {
             print(String(repeating: "+---", count: numberOfColumns) + "+")
             var column = ""
@@ -102,7 +105,7 @@ struct Game {
     }
     
     func getWord(from path: [Int]) -> String? {
-        guard let board = board, path.count > 0 else { return nil }
+        guard path.count > 0 else { return nil }
         
         return path[1...].map{ i in
             let row = i / numberOfColumns
@@ -175,18 +178,28 @@ struct Game {
         return Array(words)
     }
     
+    func getPositions(letter: String) -> [Int]? {
+        nil
+    }
+    
     func findPath(word: String) -> [Int]? {
-        var path = [-1]
+        var path = [[-1]]
         
         for letter in word {
-            
+            if let positions = getPositions(letter: String(letter)) {
+                for position in positions {
+                    
+                }
+            }
         }
         
-        return path.count == 1 ? nil : Array(path[1...])
+        return path.count == 1 && path[0] == [-1] ? nil : Array(path[0][1...])
     }
 }
 
-var game = Game()
+//var game = Game()
+var game = Game(board: [["B", "C", "I", "I", "T"], ["V", "A", "A", "I", "O"], ["N", "O", "T", "F", "N"], ["P", "N", "R", "A", "C"], ["A", "U", "E", "E", "F"]])
 game.printBoard()
 print(game.findAllWords().sorted(by: {$0.count > $1.count}))
-game.findPath(word: "casa")
+game.findPath(word: "notaio")
+
