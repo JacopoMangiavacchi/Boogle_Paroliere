@@ -178,28 +178,28 @@ struct Game {
         return Array(words)
     }
     
-    func getPositions(letter: String) -> [Int]? {
-        nil
+    func getPositions(letter: String) -> [Int] {
+        board.flatMap{ $0 }.enumerated().filter{ i, v in v == letter }.map{ i, v in i }
     }
     
     func findPath(word: String) -> [Int]? {
-        var path = [[-1]]
+        var path = [[pathStart]]
         
-        for letter in word {
-            if let positions = getPositions(letter: String(letter)) {
-                for position in positions {
-                    
+        for letter in word.uppercased() {
+            for pos in getPositions(letter: String(letter)) {
+                if canAdd(pos: pos, to: path[0]) {
+                    path[0].append(pos)
+                    break
                 }
             }
         }
         
-        return path.count == 1 && path[0] == [-1] ? nil : Array(path[0][1...])
+        return path.count == 1 && path[0] == [pathStart] ? nil : Array(path[0][1...])
     }
 }
 
 //var game = Game()
 var game = Game(board: [["B", "C", "I", "I", "T"], ["V", "A", "A", "I", "O"], ["N", "O", "T", "F", "N"], ["P", "N", "R", "A", "C"], ["A", "U", "E", "E", "F"]])
 game.printBoard()
-print(game.findAllWords().sorted(by: {$0.count > $1.count}))
-game.findPath(word: "notaio")
-
+//print(game.findAllWords().sorted(by: {$0.count > $1.count}))
+print(game.findPath(word: "notaio"))
