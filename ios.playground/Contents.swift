@@ -120,8 +120,17 @@ struct Game {
     func isReal(word: String) -> Bool {
         let range = NSRange(location: 0, length: word.utf16.count)
         let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: language)
-
-        return misspelledRange.location == NSNotFound
+        
+        if misspelledRange.location == NSNotFound && word.count > 2 {
+            let subWord = String(word[...word.index(word.endIndex, offsetBy: -2)])
+            for next in (completionWords(partial: subWord).filter{ $0.count == word.count }) {
+                if next == word {
+                    return true
+                }
+            }
+        }
+        
+        return false
     }
 
     func completionWords(partial: String) -> [String] {
@@ -171,5 +180,5 @@ struct Game {
 var game = Game()
 game.start()
 game.printBoard()
-print(game.findAllWords())
+print(game.findAllWords().sorted(by: {$0.count > $1.count}))
 
