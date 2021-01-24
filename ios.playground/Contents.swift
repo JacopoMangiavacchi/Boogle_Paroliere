@@ -32,21 +32,15 @@ struct Game {
     
     let language = "it_IT"
     let pathStart = -1
-    
-    let checker = UITextChecker()
+    let numberOfDices = 25
+    let numberOfColumns = 5
+    let numberOfFaces = 6
 
+    let checker = UITextChecker()
     
     var board: [[String]]?
     
-    var numberOfDices = -1
-    var numberOfColumns = -1
-    var numberOfFaces = -1
-
-    mutating func start() {
-        numberOfDices = dice.count
-        numberOfColumns = Int(sqrt(Double(numberOfDices)))
-        numberOfFaces = dice[0].count
-
+    init() {
         var board = [[String]](repeating: [String](repeating: "", count: numberOfColumns), count: numberOfColumns)
         
         for i in 0..<numberOfDices {
@@ -180,9 +174,19 @@ struct Game {
         
         return Array(words)
     }
+    
+    func findPath(word: String) -> [Int]? {
+        var path = [-1]
+        
+        for letter in word {
+            
+        }
+        
+        return path.count == 1 ? nil : Array(path[1...])
+    }
 }
 
 var game = Game()
-game.start()
 game.printBoard()
 print(game.findAllWords().sorted(by: {$0.count > $1.count}))
+game.findPath(word: "casa")
