@@ -97,6 +97,21 @@ enum Language : Int{
     }
 }
 
+extension Array {
+    mutating func randomize() {
+        for i in 0..<self.count {
+            let r = Int.random(in: 0..<(self.count - i))
+            (self[i], self[i+r]) = (self[i+r], self[i])
+        }
+    }
+
+    func randomized() -> Self {
+        var copy = self
+        copy.randomize()
+        return copy
+    }
+}
+
 struct Game {
     let pathStart = -1
     let numberOfDices = 25
@@ -117,10 +132,12 @@ struct Game {
         else {
             var board = [[String]](repeating: [String](repeating: "", count: numberOfColumns), count: numberOfColumns)
             
+            let shuffledDices = Array(0..<25).randomized()
+            
             for i in 0..<numberOfDices {
                 let row = i / numberOfColumns
                 let col = i - (row * numberOfColumns)
-                board[row][col] = language.dices[i][Int.random(in: 0..<numberOfFaces)]
+                board[row][col] = language.dices[shuffledDices[i]][Int.random(in: 0..<numberOfFaces)]
             }
             
             self.board = board
@@ -274,8 +291,8 @@ struct Game {
 }
 
 //var game = Game()
-var game = Game(language: .Spanish)
+var game = Game(language: .English)
 //var game = Game(board: [["B", "C", "I", "I", "T"], ["V", "A", "A", "I", "O"], ["N", "O", "T", "F", "N"], ["P", "N", "R", "A", "C"], ["A", "U", "E", "E", "F"]], language: .Italian)
 game.printBoard()
-print(game.findPaths(word: "notare"))
+//print(game.findPaths(word: "notare"))
 print(game.findAllWords().sorted(by: {$0.count > $1.count}))
