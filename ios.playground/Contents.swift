@@ -1,36 +1,49 @@
 import Foundation
 import UIKit
 
-struct Game {
-    let dice = [
-                ["A", "Z", "F", "S", "Qu", "B"],
-                ["G", "C", "S", "V", "P", "A"],
-                ["H", "I", "S", "E", "R", "N"],
-                ["A", "I", "O", "B", "M", "C"],
-                ["T", "I", "V", "E", "N", "G"],
-                ["M", "O", "V", "D", "I", "T"],
-                ["V", "N", "D", "Z", "A", "E"],
-                ["O", "A", "A", "I", "E", "T"],
-                ["F", "R", "I", "P", "A", "G"],
-                ["M", "L", "R", "C", "O", "I"],
-                ["O", "N", "F", "E", "B", "L"],
-                ["L", "O", "C", "I", "D", "M"],
-                ["T", "B", "R", "L", "I", "A"],
-                ["C", "F", "A", "R", "O", "I"],
-                ["N", "U", "E", "O", "C", "T"],
-                ["L", "E", "P", "U", "S", "T"],
-                ["N", "O", "D", "E", "S", "T"],
-                ["A", "I", "O", "S", "M", "R"],
-                ["T", "G", "C", "A", "P", "I"],
-                ["L", "A", "R", "E", "S", "C"],
-                ["A", "B", "O", "O", "Qu", "M"],
-                ["G", "U", "E", "O", "N", "L"],
-                ["C", "D", "P", "M", "A", "E"],
-                ["R", "O", "E", "L", "U", "I"],
-                ["H", "I", "F", "E", "I", "E"],
-               ]
+enum Language : Int{
+    case Italian, English, Spanish
     
-    let language = "it_IT"
+    var locale: String {
+        ["it_IT", "en_EN", "sp_SP"][self.rawValue]
+    }
+    
+    var dices: [[String]] {
+        let _dices = [
+                        [ //ITALIAN
+                            ["A", "Z", "F", "S", "Qu", "B"],
+                            ["G", "C", "S", "V", "P", "A"],
+                            ["H", "I", "S", "E", "R", "N"],
+                            ["A", "I", "O", "B", "M", "C"],
+                            ["T", "I", "V", "E", "N", "G"],
+                            ["M", "O", "V", "D", "I", "T"],
+                            ["V", "N", "D", "Z", "A", "E"],
+                            ["O", "A", "A", "I", "E", "T"],
+                            ["F", "R", "I", "P", "A", "G"],
+                            ["M", "L", "R", "C", "O", "I"],
+                            ["O", "N", "F", "E", "B", "L"],
+                            ["L", "O", "C", "I", "D", "M"],
+                            ["T", "B", "R", "L", "I", "A"],
+                            ["C", "F", "A", "R", "O", "I"],
+                            ["N", "U", "E", "O", "C", "T"],
+                            ["L", "E", "P", "U", "S", "T"],
+                            ["N", "O", "D", "E", "S", "T"],
+                            ["A", "I", "O", "S", "M", "R"],
+                            ["T", "G", "C", "A", "P", "I"],
+                            ["L", "A", "R", "E", "S", "C"],
+                            ["A", "B", "O", "O", "Qu", "M"],
+                            ["G", "U", "E", "O", "N", "L"],
+                            ["C", "D", "P", "M", "A", "E"],
+                            ["R", "O", "E", "L", "U", "I"],
+                            ["H", "I", "F", "E", "I", "E"]
+                        ]
+                    ]
+
+        return _dices[0]
+    }
+}
+
+struct Game {
     let pathStart = -1
     let numberOfDices = 25
     let numberOfColumns = 5
@@ -38,9 +51,12 @@ struct Game {
 
     let checker = UITextChecker()
     
+    let language: Language
     var board: [[String]]
     
-    init(board: [[String]]? = nil) {
+    init(board: [[String]]? = nil, language: Language = .English) {
+        self.language = language
+        
         if let board = board {
             self.board = board
         }
@@ -50,7 +66,7 @@ struct Game {
             for i in 0..<numberOfDices {
                 let row = i / numberOfColumns
                 let col = i - (row * numberOfColumns)
-                board[row][col] = dice[i][Int.random(in: 0..<numberOfFaces)]
+                board[row][col] = language.dices[i][Int.random(in: 0..<numberOfFaces)]
             }
             
             self.board = board
@@ -116,7 +132,7 @@ struct Game {
     
     func isReal(word: String, fullCheck: Bool = true) -> Bool {
         let range = NSRange(location: 0, length: word.utf16.count)
-        let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: language)
+        let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: language.locale)
         
         if misspelledRange.location == NSNotFound {
             if !fullCheck {
@@ -139,7 +155,7 @@ struct Game {
         let completions = checker.completions(
                         forPartialWordRange: NSRange(0..<partial.utf16.count),
                         in: partial,
-                        language: language
+                        language: language.locale
                       )
         return completions ?? []
     }
@@ -204,7 +220,7 @@ struct Game {
 }
 
 //var game = Game()
-var game = Game(board: [["B", "C", "I", "I", "T"], ["V", "A", "A", "I", "O"], ["N", "O", "T", "F", "N"], ["P", "N", "R", "A", "C"], ["A", "U", "E", "E", "F"]])
+var game = Game(board: [["B", "C", "I", "I", "T"], ["V", "A", "A", "I", "O"], ["N", "O", "T", "F", "N"], ["P", "N", "R", "A", "C"], ["A", "U", "E", "E", "F"]], language: .Italian)
 game.printBoard()
+print(game.findPaths(word: "notare"))
 print(game.findAllWords().sorted(by: {$0.count > $1.count}))
-print(game.findPaths(word: "notaio"))
