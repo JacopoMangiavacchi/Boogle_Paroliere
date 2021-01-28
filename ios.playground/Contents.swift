@@ -5,12 +5,12 @@ enum Language : Int{
     case Italian, English, Spanish
     
     var locale: String {
-        ["it_IT", "en_EN", "sp_SP"][self.rawValue]
+        ["it_IT", "en_EN", "es_ES"][self.rawValue]
     }
     
     var dices: [[String]] {
         let _dices = [
-                        [ //ITALIAN
+                        [ // ITALIAN
                             ["A", "Z", "F", "S", "Qu", "B"],
                             ["G", "C", "S", "V", "P", "A"],
                             ["H", "I", "S", "E", "R", "N"],
@@ -36,10 +36,64 @@ enum Language : Int{
                             ["C", "D", "P", "M", "A", "E"],
                             ["R", "O", "E", "L", "U", "I"],
                             ["H", "I", "F", "E", "I", "E"]
+                        ],
+                        [ // ENGLISH
+                            ["A", "A", "E", "E", "G", "N"],
+                            ["A", "B", "B", "J", "O", "O"],
+                            ["A", "C", "H", "O", "P", "S"],
+                            ["A", "F", "F", "K", "P", "S"],
+                            ["A", "O", "O", "W", "T", "T"],
+                            ["C", "I", "M", "O", "T", "U"],
+                            ["D", "E", "I", "L", "R", "X"],
+                            ["D", "E", "L", "R", "V", "Y"],
+                            ["D", "I", "S", "T", "T", "Y"],
+                            ["E", "E", "G", "H", "N", "W"],
+                            ["E", "E", "I", "N", "S", "V"],
+                            ["E", "H", "R", "T", "V", "W"],
+                            ["E", "I", "O", "S", "S", "T"],
+                            ["E", "L", "T", "T", "R", "Y"],
+                            ["H", "I", "M", "N", "Qu", "U"],
+                            ["H", "L", "N", "N", "R", "Z"],
+                            ["A", "A", "E", "E", "G", "N"],
+                            ["A", "C", "H", "O", "P", "S"],
+                            ["A", "F", "F", "K", "P", "S"],
+                            ["D", "E", "I", "L", "R", "X"],
+                            ["D", "E", "L", "R", "V", "Y"],
+                            ["E", "E", "G", "H", "N", "W"],
+                            ["E", "I", "O", "S", "S", "T"],
+                            ["H", "I", "M", "N", "Qu", "U"],
+                            ["H", "L", "N", "N", "R", "Z"]
+                        ],
+                        [ // SPANISH
+                            ["A", "A", "A", "F", "R", "S"],
+                            ["A", "A", "D", "I", "R", "S"],
+                            ["A", "A", "E", "E", "E", "H"],
+                            ["A", "C", "E", "I", "L", "T"],
+                            ["A", "D", "E", "N", "N", "N"],
+                            ["A", "E", "E", "E", "E", "M"],
+                            ["A", "E", "E", "M", "O", "U"],
+                            ["A", "E", "G", "M", "N", "N"],
+                            ["A", "E", "I", "I", "T", "T"],
+                            ["A", "F", "I", "R", "S", "U"],
+                            ["B", "J", "L", "Qu", "X", "Z"],
+                            ["C", "C", "N", "Ñ", "S", "T"],
+                            ["C", "E", "I", "L", "P", "T"],
+                            ["C", "E", "I", "P", "S", "T"],
+                            ["C", "G", "O", "R", "R", "V"],
+                            ["D", "D", "L", "N", "O", "R"],
+                            ["D", "E", "H", "L", "O", "R"],
+                            ["D", "H", "H", "N", "O", "T"],
+                            ["D", "H", "L", "N", "O", "R"],
+                            ["E", "M", "O", "T", "T", "T"],
+                            ["E", "N", "S", "S", "S", "U"],
+                            ["F", "I", "P", "R", "S", "Y"],
+                            ["H", "I", "P", "R", "R", "Y"],
+                            ["N", "Ñ", "O", "O", "T", "U"],
+                            ["O", "O", "O", "T", "T", "U"]
                         ]
                     ]
 
-        return _dices[0]
+        return _dices[self.rawValue]
     }
 }
 
@@ -220,7 +274,8 @@ struct Game {
 }
 
 //var game = Game()
-var game = Game(board: [["B", "C", "I", "I", "T"], ["V", "A", "A", "I", "O"], ["N", "O", "T", "F", "N"], ["P", "N", "R", "A", "C"], ["A", "U", "E", "E", "F"]], language: .Italian)
+var game = Game(language: .Spanish)
+//var game = Game(board: [["B", "C", "I", "I", "T"], ["V", "A", "A", "I", "O"], ["N", "O", "T", "F", "N"], ["P", "N", "R", "A", "C"], ["A", "U", "E", "E", "F"]], language: .Italian)
 game.printBoard()
 print(game.findPaths(word: "notare"))
 print(game.findAllWords().sorted(by: {$0.count > $1.count}))
