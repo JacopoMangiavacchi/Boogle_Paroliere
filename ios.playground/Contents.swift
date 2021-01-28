@@ -120,7 +120,7 @@ struct Game {
 
     let checker = UITextChecker()
     
-    let language: Language
+    var language: Language
     var board: [[String]]
     
     init(board: [[String]]? = nil, language: Language = .English) {
@@ -130,18 +130,23 @@ struct Game {
             self.board = board
         }
         else {
-            var board = [[String]](repeating: [String](repeating: "", count: numberOfColumns), count: numberOfColumns)
-            
-            let shuffledDices = Array(0..<25).randomized()
-            
-            for i in 0..<numberOfDices {
-                let row = i / numberOfColumns
-                let col = i - (row * numberOfColumns)
-                board[row][col] = language.dices[shuffledDices[i]][Int.random(in: 0..<numberOfFaces)]
-            }
-            
-            self.board = board
+            self.board = [[String]]()
+            self.new()
         }
+    }
+    
+    mutating func new() {
+        var board = [[String]](repeating: [String](repeating: "", count: numberOfColumns), count: numberOfColumns)
+        
+        let shuffledDices = Array(0..<25).randomized()
+        
+        for i in 0..<numberOfDices {
+            let row = i / numberOfColumns
+            let col = i - (row * numberOfColumns)
+            board[row][col] = language.dices[shuffledDices[i]][Int.random(in: 0..<numberOfFaces)]
+        }
+        
+        self.board = board
     }
     
     func printBoard() {
@@ -296,3 +301,11 @@ var game = Game(language: .English)
 game.printBoard()
 //print(game.findPaths(word: "notare"))
 print(game.findAllWords().sorted(by: {$0.count > $1.count}))
+
+
+game.language = .Italian
+game.printBoard()
+game.new()
+
+print(game.findAllWords().sorted(by: {$0.count > $1.count}))
+
